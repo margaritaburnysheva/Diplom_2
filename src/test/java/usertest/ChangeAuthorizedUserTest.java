@@ -38,7 +38,7 @@ public class ChangeAuthorizedUserTest {
         this.expectedEmail = expectedEmail;
     }
     @Parameterized.Parameters(name="Тестовые данные: {0}, {1}, {2}, {3}, {4}")
-    public static Object[][] dataTwo() {
+    public static Object[][] getTestData() {
         return new Object[][]{
                 {UserDataGenerator.randomName, UserDataGenerator.secondRandomEmail, UserDataGenerator.randomPassword, UserDataGenerator.randomName, UserDataGenerator.secondRandomEmail},
                 {UserDataGenerator.secondRandomName, UserDataGenerator.secondRandomEmail, UserDataGenerator.randomPassword, UserDataGenerator.secondRandomName, UserDataGenerator.secondRandomEmail},

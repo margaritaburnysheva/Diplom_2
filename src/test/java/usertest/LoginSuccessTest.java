@@ -45,13 +45,10 @@ public class LoginSuccessTest {
                 .password(faker.internet().password(6,10))
                 .build();
         userClient.createUser(user);
-        userClient.loginUser(UserCredentials.from(user))
+        token=userClient.loginUser(UserCredentials.from(user))
                 .assertThat()
                 .statusCode(SC_OK)
                 .and()
-                .assertThat()
-                .body("accessToken",notNullValue());
-        token=userClient.loginUser(UserCredentials.from(user))
                 .assertThat()
                 .body("accessToken",notNullValue())
                 .extract().path("accessToken");

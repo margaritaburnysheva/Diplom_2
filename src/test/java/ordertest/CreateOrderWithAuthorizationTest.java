@@ -54,7 +54,6 @@ public class CreateOrderWithAuthorizationTest {
                 .build();
         UserClient userClient=new UserClient();
         userClient.createUser(user);
-        userClient.loginUser(UserCredentials.from(user));
         token=userClient.loginUser(UserCredentials.from(user))
                 .extract().path("accessToken");
         Ingredients ingredients=new Ingredients(data);

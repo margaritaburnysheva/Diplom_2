@@ -5,6 +5,8 @@ import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
+import io.restassured.response.ValidatableResponse;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -12,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import user.User;
 import user.UserClient;
+import user.UserCredentials;
 import user.UserDataGeneratorWithNull;
 
 import static org.apache.http.HttpStatus.*;
@@ -23,6 +26,7 @@ public class CreateUserWithoutRequiredDataTest {
     private final User userGeneration;
     private final int statusCode;
     private final String errorMessage;
+    private String token;
     public CreateUserWithoutRequiredDataTest(User userGeneration, int statusCode, String errorMessage) {
         this.userGeneration=userGeneration;
         this.statusCode = statusCode;
@@ -50,11 +54,20 @@ public class CreateUserWithoutRequiredDataTest {
     @Description("Check create user without required data return 403 and 'Email, password and name are required fields'")
     public void createUserWithoutRequiredData() {
         User user=userGeneration;
-        userClient.createUser(user)
+        ValidatableResponse validatableResponse=userClient.createUser(user);
+        token=userClient.loginUser(UserCredentials.from(user))
+                .extract().path("accessToken");
+        validatableResponse
                 .assertThat()
                 .statusCode(statusCode)
                 .and()
                 .assertThat()
                 .body("message", is(errorMessage));
+    }
+    @After
+    public void clearData() {
+        if (token != null) {
+            userClient.deleteUser(token);
+        }
     }
 }
